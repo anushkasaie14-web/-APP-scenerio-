@@ -1,40 +1,32 @@
-# Mobile Store Management System
+import csv
+import argparse
 
-class Mobile:
-    def __init__(self, brand, model, price):
-        self.brand = brand
-        self.model = model
-        self.price = int(price)
+# Accept filename using argparse
+parser = argparse.ArgumentParser()
+parser.add_argument("filename")
+args = parser.parse_args()
 
-    def category(self):
-        if self.price >= 50000:
-            return "Premium"
-        elif self.price >= 20000:
-            return "Mid-range"
-        else:
-            return "Budget"
+# Read mobile records from CSV file
+with open(args.filename, "r") as file:
+    reader = csv.DictReader(file)
 
+    mobiles = list(reader)
 
-premium = 0
-midrange = 0
-budget = 0
+# Display all mobile records
+print("All Mobile Records:")
+for mobile in mobiles:
+    print(mobile)
 
-# Read data from file
-with open("mobiles.txt", "r") as file:
-    for line in file:
-        brand, model, price = line.strip().split(",")
-        mobile = Mobile(brand, model, price)
+# Search mobile using Brand Name
+brand = input("\nEnter Brand Name to search: ")
 
-        print(mobile.brand, mobile.model, mobile.price, mobile.category())
+print("\nSearch Result:")
+found = False
 
-        if mobile.category() == "Premium":
-            premium += 1
-        elif mobile.category() == "Mid-range":
-            midrange += 1
-        else:
-            budget += 1
+for mobile in mobiles:
+    if mobile["Brand"].lower() == brand.lower():
+        print(mobile)
+        found = True
 
-print("\nCount:")
-print("Premium:", premium)
-print("Mid-range:", midrange)
-print("Budget:", budget)
+if not found:
+    print("Mobile not found")
